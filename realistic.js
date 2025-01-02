@@ -1456,9 +1456,25 @@ func:function()
 		name:'wheat',
 		desc:'[wheat] can be created into bread.',
 		icon:[4,6],
-		turnToByContext:{'eating':{'health':0.005,'happiness':0},'decay':{'wheat':0.2,'spoiled food':0.8}},
 		partOf:'food',
 		category:'food',
+	  	tick:function(me,tick)
+		{
+			var toSpoil=me.amount*0.005;
+			var spent=G.lose(me.name,randomFloor(toSpoil),'decay');
+		},
+	});
+	new G.Res({
+		name:'barley',
+		desc:'[barley] is used for animal feed.',
+		icon:[4,6],
+		partOf:'food',
+		category:'food',
+		tick:function(me,tick)
+		{
+			var toSpoil=me.amount*0.005;
+			var spent=G.lose(me.name,randomFloor(toSpoil),'decay');
+		},
 	});
 	
 	/*=====================================================================================
@@ -2350,11 +2366,11 @@ func:function()
 		desc:'@Generates wheat.',
 		icon:[4,2],
 		cost:{},
-    //require:{'worker':1}
+    //require:{'worker':1,'stone tools':1},
 		effects:[
-			{type:'gather',what:{'wheat':1'}}
+			{type:'gather',what:{'wheat':1','barley':1}}
 		],
-  req:{'settle':true},
+		req:{'settle':true},
 		category:'production',
 	});
   new G.Unit({
@@ -3012,6 +3028,15 @@ func:function()
 		icon:[24,8],
 		cost:{'insight':25},
 		req:{'settle':true},
+		effects:[
+		],
+	});
+	 new G.Tech({
+		name:'animal-domestication',
+		desc:'@allows your people to domesticate animals in the region.<>',
+		icon:[24,8],
+		cost:{'insight':75},
+		req:{'settle':true,'hunting':true},
 		effects:[
 		],
 	});
@@ -3941,6 +3966,26 @@ func:function()
 		},
 		mult:5,
 	});
+	//mod goods
+	new G.Goods({
+		name:'wheat',
+		desc:'wheat can be farmed and created into bread',
+		icon:[0,10],
+		res:{
+			'gather':{'wheat':1},
+		},
+		mult:5,
+	});
+	new G.Goods({
+		name:'barley',
+		desc:'barley is used to feed domesticated animals',
+		icon:[0,10],
+		res:{
+			'gather':{'barley':1},
+		},
+		mult:5,
+	});
+	
 	
 	/*=====================================================================================
 	TILE EFFECTS
