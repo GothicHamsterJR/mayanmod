@@ -1,16 +1,14 @@
 G.AddData({
-name:'Default dataset',
-author:'Orteil',
-desc:'The default dataset for Legacy.',
+name:'Realistic Mod',
+author:'GothicHamster',
+desc:'A mod that makes the game more realistic and follows real human history loosely/',
 engineVersion:1,
 manifest:0,
 func:function()
 {
 	/*
-		Note : unlike some other strategy games, this dataset does not attempt to replicate Earth human history. In fact, care has been taken not to mention any existing civilizations; other topics consciously avoided are the player's species (no "mankind" or "humans") and gender ("they" is used when referring to any single individual).
-		Similarly, technologies do not necessarily follow the order in which they were invented in real life, if it makes sense for them to do so.
-		Mods should feel free to follow along these guidelines or to implement real-world civilizations, species, and genders into the game if they wish to.
-			-Playable species may be added as a game concept at some point in the future.
+		Note : unlike some other strategy games, this dataset does attempt to replicate Earth human history. In fact, care has been taken to mention existing civilizations.
+		Similarly, technologies may not necessarily follow the order in which they were invented in real life, if it makes sense for them to do so.
 	*/
 	
 	/*=====================================================================================
@@ -1453,6 +1451,31 @@ func:function()
 		icon:[11,5],
 		category:'main',
 	});
+	//mod res
+  new G.Res({
+		name:'wheat',
+		desc:'[wheat] can be created into bread.',
+		icon:[4,6],
+		partOf:'food',
+		category:'food',
+	  	tick:function(me,tick)
+		{
+			var toSpoil=me.amount*0.005;
+			var spent=G.lose(me.name,randomFloor(toSpoil),'decay');
+		},
+	});
+	new G.Res({
+		name:'barley',
+		desc:'[barley] is used for animal feed.',
+		icon:[4,6],
+		partOf:'food',
+		category:'food',
+		tick:function(me,tick)
+		{
+			var toSpoil=me.amount*0.005;
+			var spent=G.lose(me.name,randomFloor(toSpoil),'decay');
+		},
+	});
 	
 	/*=====================================================================================
 	UNITS
@@ -2348,6 +2371,34 @@ func:function()
 			{type:'gather',what:{'insight':50,'culture':50,'faith':50,'science':50,'influence':50}}
 		],
 		category:'debug',
+	});
+
+	//mod units
+	new G.Unit({
+		name:'agriculture',
+		desc:'@Generates wheat.',
+		icon:[4,2],
+		cost:{},
+    //require:{'worker':1,'stone tools':1},
+		effects:[
+			{type:'gather',what:{'wheat':1','barley':1}}
+		],
+		req:{'settle':true},
+		category:'production',
+	});
+  new G.Unit({
+		name:'mud shelter',
+		desc:'@provides 3 [housing]<>Basic, frail dwelling in which a small family can live.',
+		icon:[9,2],
+		cost:{'mud':50},
+		use:{'land':1},
+		//require:{'worker':1,'knapped tools':1},
+		effects:[
+			{type:'provide',what:{'housing':3}},
+			{type:'waste',chance:1/1000}
+		],
+		req:{'sedentism':true},
+		category:'housing',
 	});
 	
 	
